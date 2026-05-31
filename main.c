@@ -17,20 +17,29 @@ int main(){
             printf("input info node baru: ");
             scanf("%d", &valNode);
             InsSearch(&T, valNode);
-            printf("Node %d berhasil diproses ke dalam BST.\n", valNode);
+            printf("Node %d berhasil diproses & diseimbangkan dengan AVL.\n", valNode);
             break;
         case 2:
             if(IsEmpty(T)) printf("Pohon Kosong.\n");
-            else PrintTree(T);
+            else PrintTreeDownward(T);
             break;
         case 3:
-            printf("Exiting program.\n");
+            printf("input info node yang ingin dihapus: ");
+            scanf("%d", &valNode);
+            T = DelBTree(T, valNode);
+            printf("Node %d berhasil dihapus dari BST.\n", valNode);
             break;
-        default:
+        case 4:
+            printf("input info node yang dicari: ");
+            scanf("%d", &valNode);
+            SearchBST(T, valNode, 1);
+            break;
+        case 5:
+            printf("Exiting program.\n");
             break;
         }
 
-    } while (pilihan != 3);
+    } while (pilihan != 5);
 
     return 0;
 }

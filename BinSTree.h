@@ -165,7 +165,15 @@ void DestroyTree (BinTree *P);
 /* Menghapus seluruh elemen Tree secara Rekursif */
 /* IS : P terdefinisi */
 /* FS : Semua simpul P sudah dihapus secara PostOrder :  Kiri, Kanan, Akar */
-void DelBTree (BinTree *P, infotype X);
+address getSuccessor(address curr);
+/* Mengirimkan alamat node successor (node terkecil di subtree kanan) */
+/* IS : curr adalah node yang memiliki anak kanan (Right(curr) != Nil) */
+/* FS : Mengirimkan alamat node successor (node terkecil di subtree kanan) */
+address getPredecessor(address curr);
+/* Mengirimkan alamat node predecessor (node terbesar di subtree kiri) */
+/* IS : curr adalah node yang memiliki anak kiri (Left(curr) != Nil) */
+/* FS : Mengirimkan alamat node predecessor (node terbesar di subtree kiri) */
+address DelBTree (address P, infotype X);
 /* IS : Pohon P TIDAK kosong */
 /* FS : Nilai X yang dihapus pasti ada, sebuah node dengan nilai X dihapus */
 void DelNode (BinTree *P);

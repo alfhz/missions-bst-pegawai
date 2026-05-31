@@ -343,7 +343,8 @@ void Menu() {
     printf("1. Insert Node\n");
     printf("2. Print Tree\n");
     printf("3. Search Node\n");
-    printf("4. Exit\n");
+    printf("4. Delete Node\n");
+    printf("5. Exit\n");
     printf("Pilihan: ");
 }
 
@@ -367,28 +368,65 @@ void insertWithBST(BinTree T, infotype valNode){
     }
 }
 
-/* Hapus satu node di BST dan rapihin lagi cabangnya */
-void DelNode(BinTree *P) {
-    address temp; // buat nyimpen node yang mau dihapus
-    if (Left(*P) == Nil) {
-        temp = *P; *P = Right(*P); DeAlokasi(temp);
-    } else if (Right(*P) == Nil) {
-        temp = *P; *P = Left(*P); DeAlokasi(temp);
-    } else {
-        // Punya 2 anak: ambil nilai terkecil di kanan buat gantiin
-        address min = Right(*P);
-        while (Left(min) != Nil) min = Left(min);
-        Info(*P) = Info(min);
-        DelBTree(&Right(*P), Info(min)); // <--- Ini memanggil DelBTree
+// Fungsi pembantu untuk mencari pengganti node yang dihapus dengan successor (node terkecil di subtree kanan)
+address getSuccessor(address curr) {
+    curr = Right(curr);
+    while (curr != Nil && Left(curr) != Nil) {
+        curr = Left(curr);
     }
+    return curr;
 }
 
-/* WAJIB ADA: Pastikan fungsi ini tidak hilang di file binary_tree.c kamu */
-void DelBTree(BinTree *P, infotype X) {
-    if (X < Info(*P)) DelBTree(&Left(*P), X);
-    else if (X > Info(*P)) DelBTree(&Right(*P), X);
-    else DelNode(P);
+// Fungsi pembantu untuk mencari pengganti node yang dihapus dengan predecessor (node terbesar di subtree kiri)
+address getPredecessor(address curr) {
+    curr = Left(curr);
+    while (curr != Nil && Right(curr) != Nil) {
+        curr = Right(curr);
+    }
+    return curr;
 }
+
+// Fungsi utama untuk menghapus node dengan nilai X dari BST
+address DelBTree(address P, infotype X) {
+    if (P == Nil) {
+        return Nil;
+    }
+
+    // TAHAP 1: MENCARI NODE (Traversing)
+    if (X < Info(P)) {
+        Left(P) = DelBTree(Left(P), X);
+    } 
+    else if (X > Info(P)) {
+        Right(P) = DelBTree(Right(P), X);
+    } 
+    
+    // TAHAP 2: NODE KETEMU (X == Info(P))
+    else {
+        // Kasus 1 & 2: Node adalah Leaf ATAU hanya punya 1 anak
+        if (Left(P) == Nil) {
+            address temp = Right(P);
+            free(P); // Bebaskan memori node yang dihapus
+            return temp;
+        } 
+        else if (Right(P) == Nil) {
+            address temp = Left(P);
+            free(P);
+            return temp;
+        }
+
+        // Kasus 3: Node punya 2 anak
+        address temp = getSuccessor(P);
+
+        // Copy nilai pengganti ke node saat ini
+        Info(P) = Info(temp);
+
+        // Hapus node successor di posisi aslinya pada subtree kanan
+        Right(P) = DelBTree(Right(P), Info(temp));
+    }
+    
+    return P; // Kembalikan pointer yang sudah ter-update
+}
+
 /* Hapus seluruh pohon sampai bersih */
 void DestroyTree(BinTree *P) {
     if (!IsEmpty(*P)) {

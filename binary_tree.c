@@ -522,21 +522,20 @@ void RotateLeft(BinTree *P) {
     *P = child; // Langsung mengubah pointer parent-nya
 }
 
-// Fungsi  untuk menyeimbangkan node apapun
+// Fungsi  untuk menyeimbangkan node setelah operasi insert atau delete
 address BalanceNode(address P) {
     if (P == Nil) {
         return Nil;
     }
 
-    // Hitung Balance Factor (BF) node saat ini
-    int balance = Depth(Left(P)) - Depth(Right(P));
+    // Hitung Balance Factor (BF)
+    int bf = Depth(Left(P)) - Depth(Right(P));
 
-    // KASUS KIRI (Left Heavy): Jika BF > 1
-    if (balance > 1) {
+    // KASUS KIRI (Left): Jika BF > 1
+    if (bf > 1) {
         // Cek BF dari anak kirinya
         int balLeft = Depth(Left(Left(P))) - Depth(Right(Left(P)));
         
-        // Gunakan >= 0 agar bisa cover kasus Delete (di mana balLeft bisa 0)
         if (balLeft >= 0) { 
             RotateRight(&P); // Kasus LL
         } else {
@@ -544,12 +543,12 @@ address BalanceNode(address P) {
             RotateRight(&P);
         }
     }
-    // KASUS KANAN (Right Heavy): Jika BF < -1
-    else if (balance < -1) {
+
+    // KASUS KANAN (Right): Jika BF < -1
+    else if (bf < -1) {
         // Cek BF dari anak kanannya
         int balRight = Depth(Left(Right(P))) - Depth(Right(Right(P)));
         
-        // Gunakan <= 0 agar bisa cover kasus Delete
         if (balRight <= 0) {
             RotateLeft(&P); // Kasus RR
         } else {
@@ -558,5 +557,5 @@ address BalanceNode(address P) {
         }
     }
 
-    return P; // Kembalikan node yang sudah seimbang
+    return P;
 }

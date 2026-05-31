@@ -191,9 +191,9 @@ void insertWithBST(BinTree T, infotype valNode);
 // tambahan AVL
 void RotateRight(BinTree *P);
 void RotateLeft(BinTree *P);
-void InsSearchAVL(BinTree *P, infotype X);
 void PrintTreeDownward(BinTree P);
 void PrintTreeDownwardUtil(BinTree P, char *prefix, bool isTail, char *pos);
 void SearchBST(BinTree P, infotype X, int kunjungan);
+address BalanceNode(address P);
 
 #endif

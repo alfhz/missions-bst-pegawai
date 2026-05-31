@@ -17,7 +17,7 @@ int main(){
             printf("input info node baru: ");
             scanf("%d", &valNode);
             InsSearch(&T, valNode);
-            printf("Node %d berhasil diproses & diseimbangkan dengan AVL.\n", valNode);
+            printf("Node %d berhasil diinsert & diseimbangkan dengan AVL.\n", valNode);
             break;
         case 2:
             if(IsEmpty(T)) printf("Pohon Kosong.\n");

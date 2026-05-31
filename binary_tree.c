@@ -321,20 +321,22 @@ address BinSearch(BinTree P, infotype X) {
 
 /* Masukkan angka ke BST tanpa merusak urutan */
 void InsSearch(BinTree *P, infotype X) {
+    // TAHAP 1 & 2: LOGIKA INSERT BST BIASA
     if (IsEmpty(*P)) {
         *P = Alokasi(X);
         return;
-    } 
+    }
 
     if (X < Info(*P)) {
         InsSearch(&Left(*P), X);
     } else if (X > Info(*P)) {
         InsSearch(&Right(*P), X);
     } else {
-        return; 
+        return;
     }
 
-    InsSearchAVL(P, X); 
+    // TAHAP 3: BALANCING
+    *P = BalanceNode(*P);
 }
 
 // tambahan insert bst dengan cara lain
@@ -342,8 +344,8 @@ void Menu() {
     printf("\n=== BINARY SEARCH TREE ===\n");
     printf("1. Insert Node\n");
     printf("2. Print Tree\n");
-    printf("3. Search Node\n");
-    printf("4. Delete Node\n");
+    printf("3. Delete Node\n");
+    printf("4. Search Node\n");
     printf("5. Exit\n");
     printf("Pilihan: ");
 }
@@ -388,43 +390,32 @@ address getPredecessor(address curr) {
 
 // Fungsi utama untuk menghapus node dengan nilai X dari BST
 address DelBTree(address P, infotype X) {
-    if (P == Nil) {
-        return Nil;
-    }
+    // TAHAP 1 & 2: LOGIKA DELETE BST BIASA
+    if (P == Nil) return Nil;
 
-    // TAHAP 1: MENCARI NODE (Traversing)
     if (X < Info(P)) {
         Left(P) = DelBTree(Left(P), X);
-    } 
-    else if (X > Info(P)) {
+    } else if (X > Info(P)) {
         Right(P) = DelBTree(Right(P), X);
-    } 
-    
-    // TAHAP 2: NODE KETEMU (X == Info(P))
-    else {
-        // Kasus 1 & 2: Node adalah Leaf ATAU hanya punya 1 anak
+    } else {
         if (Left(P) == Nil) {
             address temp = Right(P);
-            free(P); // Bebaskan memori node yang dihapus
+            free(P);
             return temp;
-        } 
-        else if (Right(P) == Nil) {
+        } else if (Right(P) == Nil) {
             address temp = Left(P);
             free(P);
             return temp;
         }
-
-        // Kasus 3: Node punya 2 anak
         address temp = getSuccessor(P);
-
-        // Copy nilai pengganti ke node saat ini
         Info(P) = Info(temp);
-
-        // Hapus node successor di posisi aslinya pada subtree kanan
         Right(P) = DelBTree(Right(P), Info(temp));
     }
-    
-    return P; // Kembalikan pointer yang sudah ter-update
+
+    if (P == Nil) return P;
+
+    // Tahap 3: SEIMBANGKAN KEMBALI (AVL)
+    return BalanceNode(P);
 }
 
 /* Hapus seluruh pohon sampai bersih */
@@ -531,27 +522,41 @@ void RotateLeft(BinTree *P) {
     *P = child; // Langsung mengubah pointer parent-nya
 }
 
-/* Masukkan angka ke BST sekaligus otomatis menyeimbangkan (AVL) */
-void InsSearchAVL(BinTree *P, infotype X) {
-    // Hitung Balance Factor
-    int balance = Depth(Left(*P)) - Depth(Right(*P));
+// Fungsi  untuk menyeimbangkan node apapun
+address BalanceNode(address P) {
+    if (P == Nil) {
+        return Nil;
+    }
 
-    // Kasus Left-Left (LL Case)
-    if (balance > 1 && X < Info(Left(*P))) {
-        RotateRight(P);
+    // Hitung Balance Factor (BF) node saat ini
+    int balance = Depth(Left(P)) - Depth(Right(P));
+
+    // KASUS KIRI (Left Heavy): Jika BF > 1
+    if (balance > 1) {
+        // Cek BF dari anak kirinya
+        int balLeft = Depth(Left(Left(P))) - Depth(Right(Left(P)));
+        
+        // Gunakan >= 0 agar bisa cover kasus Delete (di mana balLeft bisa 0)
+        if (balLeft >= 0) { 
+            RotateRight(&P); // Kasus LL
+        } else {
+            RotateLeft(&Left(P)); // Kasus LR
+            RotateRight(&P);
+        }
     }
-    // Kasus Right-Right (RR Case)
-    else if (balance < -1 && X > Info(Right(*P))) {
-        RotateLeft(P);
+    // KASUS KANAN (Right Heavy): Jika BF < -1
+    else if (balance < -1) {
+        // Cek BF dari anak kanannya
+        int balRight = Depth(Left(Right(P))) - Depth(Right(Right(P)));
+        
+        // Gunakan <= 0 agar bisa cover kasus Delete
+        if (balRight <= 0) {
+            RotateLeft(&P); // Kasus RR
+        } else {
+            RotateRight(&Right(P)); // Kasus RL
+            RotateLeft(&P);
+        }
     }
-    // Kasus Left-Right (LR Case)
-    else if (balance > 1 && X > Info(Left(*P))) {
-        RotateLeft(&Left(*P)); 
-        RotateRight(P);        
-    }
-    // Kasus Right-Left (RL Case)
-    else if (balance < -1 && X < Info(Right(*P))) {
-        RotateRight(&Right(*P)); 
-        RotateLeft(P);           
-    }
+
+    return P; // Kembalikan node yang sudah seimbang
 }

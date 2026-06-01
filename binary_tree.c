@@ -340,15 +340,15 @@ void InsSearch(BinTree *P, infotype X) {
 }
 
 // tambahan insert bst dengan cara lain
-void Menu() {
-    printf("\n=== BINARY SEARCH TREE ===\n");
-    printf("1. Insert Node\n");
-    printf("2. Print Tree\n");
-    printf("3. Delete Node\n");
-    printf("4. Search Node\n");
-    printf("5. Exit\n");
-    printf("Pilihan: ");
-}
+// void Menu() {
+//     printf("\n=== BINARY SEARCH TREE ===\n");
+//     printf("1. Insert Node\n");
+//     printf("2. Print Tree\n");
+//     printf("3. Delete Node\n");
+//     printf("4. Search Node\n");
+//     printf("5. Exit\n");
+//     printf("Pilihan: ");
+// }
 
 void insertWithBST(BinTree T, infotype valNode){
     if(valNode < GetAkar(T)){
@@ -558,4 +558,14 @@ address BalanceNode(address P) {
     }
 
     return P;
+}
+
+
+/* Penghitung langkah pencarian untuk BST (Misi 3) */
+int GetSearchStepsBST(BinTree P, infotype X, int langkah) {
+    if (IsEmpty(P)) return langkah - 1;
+    if (Info(P) == X) return langkah;
+    
+    if (X < Info(P)) return GetSearchStepsBST(Left(P), X, langkah + 1);
+    else return GetSearchStepsBST(Right(P), X, langkah + 1);
 }

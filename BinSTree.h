@@ -44,6 +44,9 @@ BinTree GetRight (BinTree P);
 address Alokasi (infotype X);
 /* Mengirimkan address hasil alokasi sebuah elemen */
 /* Jika Alokasi berhasil, maka address != Nil dan Info (P) = X */
+address1 AlokasiList (infotype X);
+/* Mengirimkan address hasil alokasi sebuah elemen List */
+/* Jika Alokasi berhasil, maka address != Nil dan InfoList (P) = X */
 BinTree Tree (infotype Akar, BinTree L, BinTree R);
 /* Menghasilkan sebuah pohon biner dari A, L dan R, jika alokasi berhasil */
 /* Menghasilkan pohon kosong (Nil) jika alokasi gagal */
@@ -57,6 +60,9 @@ void BuildTree (BinTree *P);
 /* IS : Pita berisi "konstanta" pohon dalam bentuk prefix. Memori pasti cukup */
 /*      Alokasi pasti berhasil */
 /* FS : P dibentuk dari ekspresi dalam pita */
+ListOfNode BuildList (BinTree P);
+/* Membentuk sebuah ListOfNode dari BinTree P */
+
 
 /**** Predikat Penting *****/
 bool IsUnerLeft (BinTree P);
@@ -194,6 +200,10 @@ void RotateLeft(BinTree *P);
 void PrintTreeDownward(BinTree P);
 void PrintTreeDownwardUtil(BinTree P, char *prefix, bool isTail, char *pos);
 void SearchBST(BinTree P, infotype X, int kunjungan);
+void InsertLastList(address1 *First, infotype X);
+int GetSearchStepsList(address1 First, infotype X);
+int GetSearchStepsBST(BinTree P, infotype X, int langkah);
+
 address BalanceNode(address P);
 
 #endif

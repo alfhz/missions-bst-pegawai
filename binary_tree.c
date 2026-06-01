@@ -181,14 +181,14 @@ bool Search(BinTree P, infotype X) {
 void SearchBST(BinTree P, infotype X, int kunjungan) {
     if (IsEmpty(P)) {
         printf("Node dengan nilai %d TIDAK ditemukan di pohon.\n", X);
-        printf("Total langkah pemeriksaan: %d kali.\n", kunjungan - 1);
+        printf("Total langkah pemeriksaan: %d kali.\n", kunjungan);
         return;
     }
     printf("Langkah ke-%d -> Mengunjungi node dengan nilai %d\n", kunjungan, Info(P));
     if (Info(P) == X)
     {
         printf("Node dengan nilai %d ditemukan di pohon.\n", X);
-        printf("Total langkah pemeriksaan: %d kali.\n", kunjungan - 1);
+        printf("Total langkah pemeriksaan: %d kali.\n", kunjungan);
         return;
     }
 
